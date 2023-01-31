@@ -1,0 +1,107 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+
+\begin{document}
+\section*{Avoiding cancellation}
+\subsection*{1-8.a} We consider the function
+\begin{equation}
+    f_{1}\left(x_{0}, h\right) := \sin\left(x_{0} + h\right) - \sin\left(x_{0}\right)
+\end{equation}
+\paragraph{Cancellation: } When $h$ gets small then we have $x_{0} + h \approx x_{0}$ and hence the terms are prone to cancellation. We can use the following trigonometric identity
+\begin{equation*}
+    \sin\left(a\right)  - \sin\left(b\right) = 2 \cos\left(\frac{a +b}{2}\right) \sin\left(\frac{a-b}{2}\right)
+\end{equation*}
+From this we get the following expression when applying it to equation (1). 
+\begin{align*}
+    f_{1}\left(x_{0}, h\right) &= 2\cos\left( \frac{x_{0} + h + x_{0}}{2}\right)\sin\left(\frac{x_{0}+h-x_{0}}{2}\right)\\
+    &=  2\cos\left( \frac{2x_{0} + h}{2}\right)\sin\left(\frac{h}{2}\right)
+\end{align*}
+This expression gives the same values but in exact arithmetic for any given argument $x_{0}$ and $h$, we hence got rid of the cancellation issue.
+
+\subsection*{1-8.b}
+We are given the difference quotient approximation
+\begin{equation*}
+    f'\left(x\right) \approx \frac{f\left(x_{0}+h\right) - f\left(x_{0}\right)}{h}
+\end{equation*}
+of the derivative of $f\left(x\right) = \sin\left(x\right)$ at $x = x_{0}$. We can use the formula from above here and get
+\begin{equation*}
+    sin'\left(x\right) \approx \frac{2}{h}\cos\left( \frac{2x_{0} + h}{2}\right)\sin\left(\frac{h}{2}\right)
+\end{equation*}
+The plotting part was skipped due to it contributing only little to the learning progress.
+\subsection*{1-8.c} We are tasked with rewriting the following function
+\begin{equation*}
+    \ln\left(x - \sqrt{x^{2}-1}\right)
+\end{equation*}
+into a mathematical equivalent expression that is more suitable for numerical evaluation for any $x > 1$. The problem here is that for large $x$ we will have $x^{2} \gg 1$ and thus $x \approx \sqrt{x^{2}-1}$ which will be prone to cancellation.
+
+\paragraph{The first formula: }Let us look more closely at the term $x - \sqrt{x^{2} - 1}$. We can apply a little trick here that works well by multiplying with an expression that is $1$.
+\begin{align*}
+    x - \sqrt{x^{2}-1} &= \left(x - \sqrt{x^{2}-1}\right)\frac{x+ \sqrt{x^{2}-1}}{x + \sqrt{x^{2}-1}} \\[1mm]
+    &= \frac{\left( x - \sqrt{x^{2}-1}\right)\left(x+ \sqrt{x^{2}-1}\right)}{x + \sqrt{x^{2}-1}}  \\[1mm]
+    &= \frac{x^{2} - \left(\sqrt{x^{2}-1}\right)^{2}}{x+\sqrt{x^{2}-1}} \\[1mm]
+    &= \frac{x^{2} - x^{2}+1}{x+\sqrt{x^{2}-1}} \\[1mm]
+    &= \frac{1}{x+\sqrt{x^{2}-1}} \\
+    &= \left(x+\sqrt{x^{2}-1}\right)^{-1}
+\end{align*}
+Putting this into the above formula gives us
+\begin{equation*}
+    \ln\left(x-\sqrt{x^{2}-1}\right) = \ln\left(\left(x+\sqrt{x^{2}-1}\right)^{-1}\right) = - \ln\left(x+\sqrt{x^{2}-1}\right)
+\end{equation*}
+A numerical example for where this expression is superior to the one on the left is for a large $x$, for example, $x=10^{8}$, for which the cancellation on the left term occurs is not a problem for the right term.
+\subsection*{1-8.d}
+We are given two formulae and must state  which numerical difficulties they are affected by.
+\begin{align*}
+    &\sqrt{x + \frac{1}{x}} - \sqrt{x - \frac{1}{x}} \: x > 1\\
+    &\sqrt{\frac{1}{a^{2}} + \frac{1}{b^{2}}}\: \: a,b > 0
+\end{align*}
+The first expression is prone to cancellation when  $x \gg 1$. As then we have $\frac{1}{x} \approx 0$ and thus \begin{equation*}
+    x \gg 1 \implies \sqrt{x+\frac{1}{x}} \approx \sqrt{x} \approx \sqrt{x - \frac{1}{x}}
+\end{equation*}
+We again apply a similar technique as before and get
+\begin{equation*}
+    \sqrt{x + \frac{1}{x}} - \sqrt{x - \frac{1}{x}} = 
+    \left(\sqrt{x + \frac{1}{x}} - \sqrt{x - \frac{1}{x}}\right) \frac{ \sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}}{ \sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}}
+\end{equation*}
+This then give us
+\begin{align*}
+    \left(\sqrt{x + \frac{1}{x}} - \sqrt{x - \frac{1}{x}}\right) \frac{ \sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}}{ \sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}} &= \frac{\left(x + \frac{1}{x}\right)-\left(x-\frac{1}{x}\right)}{\sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}} \\
+    &= \frac{\frac{1}{x}+\frac{1}{x}}{\sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}} \\
+    &= \frac{\frac{2}{x}}{\sqrt{x + \frac{1}{x}} + \sqrt{x - \frac{1}{x}}} \\
+    &= \frac{2}{x\sqrt{x + \frac{1}{x}} + x\sqrt{x - \frac{1}{x}}} \\
+    &= \frac{2}{\sqrt{x^{2}\left(x + \frac{1}{x}\right)} + \sqrt{x^{2}\left(x - \frac{1}{x}\right)}} \\
+    &= \frac{2}{\sqrt{x^{3} + x} + \sqrt{x^{3} - x}} \\
+    &= \frac{2}{\sqrt{x}\sqrt{x^{2} + 1} + \sqrt{x}\sqrt{x^{2} - 1}} \\
+    &= \frac{2}{\sqrt{x}\left(\sqrt{x^{2} + 1} + \sqrt{x^{2} - 1}\right)} 
+\end{align*}
+Even though for $x \approx 1$ cancellation can occur for the term in the denominator when $\sqrt{x^{2} - 1}$ for $x^{2} \approx 1$, however this will then be added to the relative large number $\sqrt{x^{2}+1}$, hence this poses no problem.
+
+\paragraph{The second formula:} Here we have two problems. When $\left\lvert a \right\rvert$ or$\left\lvert b\right\rvert$ get large the squares of these numbers can \textbf{overflow}, hence exceeding the largest machine number. When $\left\lvert a \right\rvert$ or$\left\lvert b\right\rvert$ get very small their squares can get so small that they cannot be represented by normalized machine numbers and we hence do not have the guarantees for numerical preciseness when computing results, this will result in large roundoff errors. We hence want to find an equivalent expression that does not evaluate the squares. We have
+\begin{equation*}
+    \frac{1}{a^{2}} + \frac{1}{b^{2}} = \frac{b^{2}}{a^{2}b^{2}} + \frac{a^{2}}{a^{2}b^{2}} = \frac{1}{b^{2}}\frac{b^{2}}{a^{2}} + \frac{1}{b^{2}}\frac{a^{2}}{a^{2}} = \frac{1}{b^{2}}\left(\frac{b^{2}}{a^{2}} + \frac{a^{2}}{a^{2}}\right) = \frac{1}{b^{2}}\left(\frac{b^{2}}{a^{2}} + 1\right)
+\end{equation*}
+\begin{equation*}
+    \frac{1}{a^{2}} + \frac{1}{b^{2}} = \frac{b^{2}}{a^{2}b^{2}} + \frac{a^{2}}{a^{2}b^{2}} =\frac{1}{a^{2}}\frac{a^{2}}{b^{2}} + \frac{1}{a^{2}}\frac{b^{2}}{b^{2}} = \frac{1}{a^{2}}\left(\frac{a^{2}}{b^{2}} + \frac{b^{2}}{b^{2}}\right) = \frac{1}{a^{2}}\left(\frac{a^{2}}{b^{2}}+1\right)
+\end{equation*}
+Putting this into the root gives us the following two expressions
+\begin{equation*}
+    \sqrt{\frac{1}{b^{2}}\left(\frac{b^{2}}{a^{2}} + 1\right)} = \frac{1}{b}\sqrt{\frac{b^{2}}{a^{2}} + 1} \text{ and } \sqrt{\frac{1}{a^{2}}\left(\frac{a^{2}}{b^{2}}+1\right)} = \frac{1}{a}\sqrt{\frac{a^{2}}{b^{2}}+1}
+\end{equation*}
+We can now split the computation in a way that we do not have to worry about any overflow or underflow.
+\begin{equation*}
+    \frac{1}{b}\sqrt{\frac{b}{a}\cdot \frac{b}{a} + 1} \text{ and } \frac{1}{a}\sqrt{\frac{a}{b}\cdot \frac{a}{b} +1}
+\end{equation*}
+We do the following computation
+\begin{equation*}
+    \sqrt{ \frac{1}{a^{2}} + \frac{1}{b^{2}}} = 
+    \begin{cases}
+    \frac{1}{b}\sqrt{\frac{b}{a}\cdot \frac{b}{a} + 1} \quad &\text{if } b \leq a \, , \\[2mm]
+    \frac{1}{a}\sqrt{\frac{a}{b}\cdot \frac{a}{b} +1} &\text{if } a<  b \, .
+    \end{cases}
+\end{equation*}
+We have no more amplification of roundoff errors due to overflow or underflow here, hence this solves the problem.
+
+\end{document}
