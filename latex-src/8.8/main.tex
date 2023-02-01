@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\section*{Julia Set}
+ We are given the equation $z^{3} = 1$ and its corresponding solutions
+\begin{equation*}
+    z_{1} = 1\, \quad z_{2} = -\frac{1}{2} + \frac{1}{2}\sqrt{3}i\, \quad z_{3} = -\frac{1}{2} -\frac{1}{2}\sqrt{3}i
+\end{equation*}
+\subsection*{8-8.a}
+We want to convert the equation $z^{3} = 1$ into a system of equations $F\left(\mathbf{x}\right) = \mathbf{0}$ for a suitable $F : \mathbb{R}^{2} \to \mathbb{R}^{2}$. We can illustrate the complex plane $\mathbb{C}$ in $\mathbb{R}^{2}$ via $\left(x,y\right) \to z = x + iy$. We have 
+\begin{align*}
+    z^{3} = \left(x+iy\right)^{3} &=  \left(x^{2} + 2ixy -y^{2}\right)\left(x +iy\right)\\ 
+    &= x^{3} + 2ix^{2}yi -x^{2}y + ix^{2}y + 2i^{2}xy^{2} -iy^{3} \\
+    &=x^{3} + 2ix^{2}yi -x^{2}yi + ix^{2}y -2xy^{2} -iy^{3} \\
+    &=x^{3} + 3ix^{2}yi -3xy^{2} -iy^{3}
+\end{align*}
+We thus have 
+\begin{equation*}
+    x^{3} + 3ix^{2}yi -3xy^{2} -iy^{3} = 1
+\end{equation*}
+which results in the function
+\begin{equation*}
+    F\left(\mathbf{x}\right) = \begin{bmatrix}
+        x^{3} - 3xy^{2} - 1 \\
+        3x^{2}y - y^{3}
+    \end{bmatrix}
+\end{equation*}
+which we can then evaluate for $F\left(\mathbf{x}\right) = \mathbf{0}$.
+\subsection*{8-8.b}
+We have seen that the Newton Iteration for the multi-dimensional case is given to us by
+\begin{equation*}
+    \mathbf{x}^{\left(k+1\right)} := \mathbf{x}^{\left(k\right)} - J_{F}\left(x^{\left(k\right)}\right)^{-1}F\left(\mathbf{x}^{\left(k\right)}\right)
+\end{equation*}
+where the Jacobi Matrix is given to us by the following expression.
+\begin{equation*}
+J_{F}\left(x\right) = \begin{bmatrix}
+    3x^{2} - 3y^{2} & -6xy \\
+    6xy & 3x^{2} - 3y^{2}
+    \end{bmatrix}
+\end{equation*}
+
+
+\end{document}
