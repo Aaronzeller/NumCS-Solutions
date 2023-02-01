@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Order of convergence from error recursion}
+\subsection*{8-6.a} 
+We have seen in the lecture that to track the order of convergence we should look at the following ratio
+\begin{equation*}
+    \frac{\log\left\lvert e^{\left(k +1\right)}\right\rvert - \log\left\lvert e^{\left(k\right)}\right\rvert}{\log\left\lvert e^{\left(k\right)}\right\rvert - \log \left\lvert e^{\left(k - 1\right)}\right\rvert}
+\end{equation*}
+We then use the formula for the recursive bound for the norms of iteration errors
+\begin{equation*}
+    \left\lVert e^{\left(n + 1\right)}\right\rVert \leq \left\lVert e^{\left(n\right)}\right\rVert
+    \sqrt{\left\lVert e^{\left(n - 1\right)}\right\rVert}
+\end{equation*}
+We are given $e_1 = 1$ and $e_2 = 0.8$ for the first value, we can hence compute the errors and the approximations iteratively.
+\subsection*{8-6.b}
+We will consider the worst case, which is when the error recursion is exactly the error bound. We hence assume that the error recursion is given to us by 
+\begin{equation*}
+    \left\lVert e^{\left(n + 1\right)}\right\rVert \leq C\left\lVert e^{\left(n\right)}\right\rVert^{p}
+\end{equation*}
+as we can bound the square-root term by some constant $C$, assuming that the iterates are already very close to the zero $x^{*}$ of $F$. We can assume that $=$ holds which is the worst case. Using "teleskopieren" we get:
+\begin{equation*}
+     \left\lVert e^{\left(n + 1\right)}\right\rVert = C\left\lVert e^{\left(n\right)}\right\rVert^{p} =C\left( C \left\lVert e^{\left(n-1\right)}\right\rVert^{p}\right)^{p} = C^{p + 1} \left\lVert e^{\left(n+1\right)}\right\rVert^{p^{2}}
+\end{equation*}
+We have 
+\begin{equation*}
+    \left\lVert e^{\left(n+1\right)}\right\rVert = \left\lVert e^{\left(n\right)}\right\rVert \cdot \left\lVert e^{\left(n-1\right)}\right\rVert^{\frac{1}{2}}
+\end{equation*}
+Using the above worst-case equality we get:
+\begin{equation*}
+    \left\lVert e^{\left(n\right)}\right\rVert \cdot \left\lVert e^{\left(n-1\right)}\right\rVert^{\frac{1}{2}} = C\left\lVert e^{\left(n-1\right)}\right\rVert^{p + \frac{1}{2}}
+\end{equation*}
+And hence 
+\begin{equation*}
+    1=\frac{ \left\lVert e^{\left(n+1\right)}\right\rVert}{ \left\lVert e^{\left(n+1\right)}\right\rVert}=\frac{C^{p + 1} \left\lVert e^{\left(n+1\right)}\right\rVert^{p^{2}}}{C\left\lVert e^{\left(n-1\right)}\right\rVert^{p + \frac{1}{2}}} = C^{p}\left\lVert e^{\left(n+1\right)}\right\rVert^{p^{2} -p -\frac{1}{2}}
+\end{equation*}
+From which we can follow that 
+\begin{equation*}
+    C^{p}\left\lVert e^{\left(n+1\right)}\right\rVert^{p^{2} -p -\frac{1}{2}} = 1
+\end{equation*}
+Since this equation is true for any $n \geq 1$ it must be that 
+\begin{equation*}
+    p^{2}-p-\frac{1}{2} = 0
+\end{equation*}
+Hence we get the two solutions
+\begin{equation*}
+    p = \frac{1 \pm \sqrt{3}}{2}
+\end{equation*}
+where the negative one can be dropped. We hence can conclude that
+\begin{equation*}
+    p = \frac{1 + \sqrt{3}}{2} \text{ (Largest convergence order) with } 0 \leq C \leq 1
+\end{equation*}
+\end{document}
