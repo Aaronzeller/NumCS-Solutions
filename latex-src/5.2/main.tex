@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section{Lagrange Polynomials}
+When denoting by $L_{i}$ the $i$-th Lagrange polynomial for given nodes $t_{i}\in \mathbb{R}$ for $j = 0, \dots, n \text{ , } t_{i}\neq t_{j} \text{, if } i \neq j$. The polynomial Lagrange interpolant $p$ through the data points $\left(t_{i},y_{i}\right)_{i=0}^{n}$ has the representation
+\begin{equation*}
+    p\left(x\right) = \sum_{i=0}^{n}y_{i}L_{i}\left(x\right) \text{ with } L_{i}\left(x\right) := \prod_{\substack{j = 0 \\ j\neq i}}^{n}\frac{x-t_{j}}{t_{i}-t_{j}}\text{ , } i = 0,\dots,n
+\end{equation*}
+\subsection*{5-2.a} We should show that
+\begin{equation*}
+    \sum_{i=0}^{n}L_{i}\left(t\right) = 1 \quad \forall t  \in \mathbb{R}
+\end{equation*}
+We set $y_{j} = 1$ for all $j$ and see that $p\left(t_{j}\right) = 1$ for all $j$ we must have that $p\left(t_{j}\right) = \sum_{i=0}^{n}L_{i}\left(t\right) = 1$, hence because Theorem 5.2.2.7 states the uniqueness of the interpolation polynomial this must always be true.
+\subsection*{5-2.b} We are tasked with showing that 
+\begin{equation*}
+    \sum_{i=0}^{n}L_{i}\left(0\right)t_{i}^{j} = \begin{cases}
+        1 \quad &\text{ for } j = 0 \text{,} \\
+        0 \quad &\text{ for } j = 1, \dots , n
+    \end{cases}
+\end{equation*}
+The case $j=0$ is the same as in (5-2.a) let us hence look at the cases for which $j = 1, \dots n$. We will use the data points $\left(t_{i},t_{i}^{j}\right)$ and see that we must have $p\left(t_{i}\right) = y_{i} = t_{i}^{j}$ The Lagrange polynomial interpolant will be $p\left(x\right) \equiv x^{j}$ using the uniqueness of the interpolant. We this get that $p\left(0\right) = 0^{j} = 0 = \sum_{i = 0}^{n}L_{i}\left(0\right)t_{i}^{j}$.
+\subsection*{5-2.c} We are tasked to show that we can rewrite the Lagrange polynomial interpolant as
+\begin{equation*}
+    p\left(x\right) = \omega\left(x\right) \sum_{i=0}^{n}\frac{y_{i}}{\left(x_{i} - t_{i}\right)\omega'\left(t_{i}\right)} \quad \text{with} \quad \omega\left(t\right) := \prod_{j=0}^{n}\left(t-t_{j}\right)
+\end{equation*}
+Let us first compute the derivative
+\begin{equation*}
+    \omega'\left(t\right) = \sum_{i=0}^{n}\prod_{\substack{j=0 \\ i \neq j}}^{n}\left(t-t_{j}\right)
+\end{equation*}
+Now we have for $x = t_{k}$ that $\left(x-t_{k}\right) = 0$ and hence only for $i = k$ we get a non-zero summand and thus:
+\begin{equation*}
+    \omega'\left(t\right) = \prod_{\substack{j=0 \\ i \neq j}}^{n}\left(t_{i}-t_{j}\right)
+\end{equation*}
+Putting this into the formula of the claim we get
+\begin{align*}
+    \omega\left(x\right) \sum_{i=0}^{n}\frac{y_{i}}{\left(x_{i} - t_{i}\right)\omega'\left(t_{i}\right)} &= \prod_{j=0}^{n}\left(t-t_{j}\right) \sum_{i=0}^{n}\frac{y_{i}}{\left(x_{i} - t_{i}\right)\prod_{\substack{j=0 \\ i \neq j}}^{n}\left(t_{i}-t_{j}\right)} \\[1mm]
+    &= \sum_{i=0}^{n}\frac{y_{i}}{\prod_{\substack{j=0 \\ i \neq j}}^{n}\left(t_{i}-t_{j}\right)}\prod_{\substack{j=0 \\ j \neq i}}^{n}\left(x-t_{j}\right) \\[1mm]
+    &=
+    \sum_{i=0}^{n}\prod_{\substack{j=0 \\ j \neq i}}^{n}y_{i}\frac{x-t_{j}}{t_{i} -t_{j}} = \sum_{i=0}^{n}y_{i}L_{i}\left(x\right) = p\left(x\right)
+\end{align*}
+\end{document}
