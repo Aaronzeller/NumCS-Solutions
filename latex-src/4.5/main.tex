@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+
+\begin{document}
+\section*{Problem 4-5: Implementing Discrete Convolution}
+We have defined the discrete convolution of two vectors $x \in \mathbb{K}^{m} \text{, } h \in \mathbb{K}^{n}$ as  the vector $y \in \mathbb{K}^{m + n - 1}$ given by:
+\begin{equation*}
+    y_{k} = \sum_{j = 0}^{m - 1}h_{k-j}x_{j} \text{,} \quad k = 0 \,\text{,} \dots \text{,} \,m + n - 2
+\end{equation*}
+where $h_{j} := 0$ for $j < 0$ or $y \geq n$.
+\subsection*{a} Hence for the vectors $x = \left(x_{0} \, , \dots , \, x_{m-1}\right)^{\mathsf{T}}$ and $h = \left(h_{0} \, , \dots , \, h_{n-1}\right)^{\mathsf{T}}$ we get the following convolution (illustrated in the case that $m > n$:
+\begin{equation*}
+    h * x = 
+    \begin{pmatrix}
+    h_{0} & 0 & 0 & 0 & 0 & \dots & 0 \\
+    h_{1} & h_{0} &  0 & 0 & 0  & \dots & 0 \\
+    h_{2} & h_{1} & h_{0} & 0 & 0 & \dots & 0 \\
+    \vdots & \vdots & \vdots & \vdots & \vdots & & \vdots \\
+    h_{n-2} & h_{n-3} & h_{n-4}&h_{n-5} & h_{n-6}& \dots &0 \\
+    h_{n-1} & h_{n-2} & h_{n-3} & h_{n-4}&h_{n-5} & \dots &0 \\
+    0 & h_{n-1} & h_{n-2} & h_{n-3} & h_{n-4}& \dots & 0 \\
+    0 & 0 & h_{n-1}& h_{n-2} & h_{n-3} & \dots & 0 \\
+     \vdots & \vdots & \vdots & \vdots & \vdots & & \vdots \\
+     0 & 0 & 0 & 0 & 0 & \dots & 0 \\
+     0 & 0 & 0 & 0 & 0 & \dots & h_{0} \\
+     0 & 0 & 0 & 0 & 0 & \dots & h_{1} \\
+     \vdots & \vdots & \vdots & \vdots & \vdots & & \vdots \\
+     0 & 0 & 0 & 0 & 0 & \dots & h_{n-2} \\
+     0 & 0 & 0 & 0 & 0 & \dots & h_{n-1} \\
+    \end{pmatrix} 
+    \cdot 
+    \begin{pmatrix}
+    x_{0} \\ x_{1} \\ x_{3} \\ \vdots \\ \vdots \\ \vdots \\ \vdots \\ x_{m-3} \\ x_{m-2} \\x_{m-1}
+    \end{pmatrix}
+    \quad 
+    \begin{matrix}
+    0\\ 1 \\2 \\ \vdots \\ n-2 \\ n-1 \\ n \\ n+1 \\ \vdots \\ m-2\\ m-1\\ m \\ \vdots \\ m + n -3 \\ m + n - 2
+    \end{matrix}
+\end{equation*}
+We can make this periodic using zero padding in both $h$ and $x$. It important to remember that this will result in a blowup of resulting vector, however the matrix that we will get will be circulant which allows the discrete convolution to be realized using multiplication with a circulant matrix. We need to zero pad $x$ on the bottom and $h$ on the top:
+\begin{equation*}
+    \Tilde{\mathbf{x}} = \begin{bmatrix}
+    \mathbf{x} \\
+    \mathbf{0}
+    \end{bmatrix} \qquad \Tilde{\mathbf{h}} = \begin{bmatrix}
+    \mathbf{h} \\
+    \mathbf{0}
+    \end{bmatrix}
+\end{equation*}
+For the vector $\mathbf{x}$ this is apparent from just looking at the above matrix, the reasoning for $\mathbf{h}$ involves seeing that we need to account for this, such that the product will still contain the same non-zero entries (no more and no less).
+\pagebreak
+
+Looking at the definition of the discrete periodic convolution we have:
+\begin{equation*}
+    y_{k} = \sum_{j=0}^{n-1}p_{\left(k-j\right) \text{ mod } n} \, \cdot x_{j} \text{,} \quad k \in \left\{0 \,,\dots,\,n-1\right\}
+\end{equation*}
+We can thus see that for $\mathbf{\Tilde{h}}\, *_{N}\mathbf{\Tilde{x}}$ we have (where $N \geq \text{max}\left\{n\,,\,m\right\}$).
+\begin{align*}
+\left(\mathbf{\Tilde{h}}\, *_{N}\mathbf{\Tilde{x}}\right)_{k} &= 
+    \sum_{j=0}^{N-1}\mathbf{\Tilde{h}}_{\left(k-j\right) \text{ mod } N} \, \cdot \mathbf{\Tilde{x}}_{j} \\[1mm]
+    &= \sum_{j=0}^{m-1}\mathbf{\Tilde{h}}_{\left(k-j\right) \text{ mod } N} \, \cdot \mathbf{\Tilde{x}}_{j} \quad \text{(For $j > m - 1$ we have $\left(\mathbf{\Tilde{x}}\right)_{j}=0)$} \\[1mm]
+    &= \sum_{j=0}^{\text{min}\left\{k \,,\,m-1\right\}} \hspace{8.55px}\mathbf{\Tilde{h}}_{\left(k-j\right) \text{ mod } N} \, \cdot \mathbf{\Tilde{x}}_{j} \quad \text{(For $j > m - 1$ we have $\left(\mathbf{\Tilde{x}}\right)_{j}=0)$} \\
+    &+ \sum_{j=\text{min}\left\{k + 1 \,,\,m\right\}}^{m-1} \mathbf{\Tilde{h}}_{\left(k-j\right) \text{ mod } N} \, \cdot \mathbf{\Tilde{x}}_{j} \quad \text{(For $j > m - 1$ we have $\left(\mathbf{\Tilde{x}}\right)_{j}=0)$}
+\end{align*}
+We can see that if $m-1 \leq k \leq N-1$ then the second sum becomes 0 and the first sum has $\left(\mathbf{\Tilde{h}}\right)_{k-j}=0)$ for $k -j > n - 1$ and thus we only leave the entries $k > n -k - 1$
+\begin{equation*}
+    \left(\mathbf{\Tilde{h}}\, *_{N}\mathbf{\Tilde{x}}\right)_{k} = \sum_{j=0}^{\text{min}\left\{k \,,\,m-1\right\}} \mathbf{\Tilde{h}}_{\left(k-j\right) \text{ mod } N} \, \cdot \mathbf{\Tilde{x}}_{j} =\sum_{j=\text{max}\left\{0, k - n + 1\right\}}^{\text{min}\left\{k \,,\,m-1\right\}} \mathbf{\Tilde{h}}_{k-j} \, \cdot \mathbf{\Tilde{x}}_{j}
+\end{equation*}
+If $0 \leq k \leq m - 2$ then both terms remain and we have:
+\begin{align*}
+\left(\mathbf{\Tilde{h}}\, *_{N}\mathbf{\Tilde{x}}\right)_{k} &= \sum_{j=0}^{k} \mathbf{\Tilde{h}}_{\left(k-j\right) \text{ mod } N} \, \cdot \mathbf{\Tilde{x}}_{j}  + \sum_{j=k + 1}^{m-1} \mathbf{\Tilde{h}}_{\left(k-j\right) \text{ mod } N} \, \cdot \mathbf{\Tilde{x}}_{j} \\[1mm]
+&= \sum_{j=0}^{k} \mathbf{\Tilde{h}}_{k-j} \, \cdot \mathbf{\Tilde{x}}_{j}  + \sum_{j=k + 1}^{m-1} \mathbf{\Tilde{h}}_{N + k - j} \, \cdot \mathbf{\Tilde{x}}_{j} \\[1mm]
+&= \sum_{j=\text{max}\left\{0\,,\,k-n+1\right\}}^{k} \mathbf{\Tilde{h}}_{k-j} \, \cdot \mathbf{\Tilde{x}}_{j}  + \sum_{j=k + 1}^{m-1} \mathbf{\Tilde{h}}_{N + k - j} \, \cdot \mathbf{\Tilde{x}}_{j}
+\end{align*}
+Since the first sum is equal to the sum we get in the first case as $\text{min}\left\{k\,,\,m-1\right\} = k$ in the second case, we must have that the second sum is zero, which gives $\mathbf{\Tilde{h}}_{N+k-j} = 0$  for $j +1 \leq k \leq m-1$ and $0 \leq k \leq m - 2$ and thus $N + k - j \geq n$ (as we defined these entries to be zero), from which then follows that $N \geq n + m - 1$. Hence if $N \geq n + m - 1$ we have that both cases give us the same sum and we can thus write:
+\begin{equation*}
+    \mathbf{h} * \mathbf{x} = \left(\mathbf{\Tilde{h}} *_{m+n-1} \mathbf{\Tilde{x}}\right)_{0:n+m-2}
+\end{equation*}
+The periodicity is not necessary to still get the correct result, as $N = n + m - 1$ produces only relevant components.
+\end{document}
