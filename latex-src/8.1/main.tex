@@ -1,0 +1,32 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\section*{Convergent Newton Iteration}
+The following statement is given to us: If $F\left(x\right)$ belongs to $C^{2}\left(\mathbb{R}\right)$, is strictly increasing, is convex, and has a unique zero, then the Newton iteration for $F\left(x\right) = 0$ is well defined and will converge to the zero of $F\left(x\right)$ for any initial guess $x^{\left(0\right)} \in \mathbb{R}$. 
+\paragraph{Idea: } Let $x^{\left(0\right)}$ be arbitrarily chosen the Newton Iteration is given to us by 
+\begin{equation*}
+    x^{\left(k+1\right)}:= x^{\left(k\right)} - \frac{F\left(x^{\left(k\right)}\right)}{F'\left(x^{\left(k\right)}\right)}
+\end{equation*}
+
+We can immediately see that because $F$ is strictly increasing we always have $F'\left(x\right) > 0$ and hence the Newton Iteration is always \textbf{well-defined}. $F$ is continuously differentiable ass it is in $C^{2}\left(\mathbb{R}\right)$. Because $F$ is convex the tangent must be below the graph, and hence the intersection of the tangent and the x-axis lies to the right of $x^{*}$ if we approach from the right and on the left otherwise. We have the following cases.
+
+\paragraph{Case 1: $x^{\left(0\right)} < x^{*}\newline$}
+Because $F$ is convex the tangent must lie below the function and thus it must intersect the x-axis to the right of $x^{*}$ and we get $x^{\left(1\right)} > x^{*}$ and we are in the second case.
+\paragraph{Case 2: $x^{\left(0\right)} > x^{*}\newline$}
+We may assume here that we approach $x^{*}$ from the right side and hence $F\left(x^{\left(k\right)}\right) > x^{*}$ is true. Because we have already shown that $F'\left(x^{\left(k\right)}\right) > 0$ we can see that 
+\begin{equation*}
+    \frac{F\left(x^{\left(k\right)}\right)}{F'\left(x^{\left(k\right)}\right)} > 0 \implies x^{\left(k+1\right)} := x^{\left(k\right)} - \frac{F\left(x^{\left(k\right)}\right)}{F'\left(x^{\left(k\right)}\right)} < x^{\left(k\right)}
+\end{equation*}
+Hence the sequence given to us by $\left(x^{\left(k\right)}\right)_{k}$ is decreasing, as it is also bounded by $x^{*}$ as $F$ is convex as discussed above, we can conclude that the sequence must converge. $F$ is continuous as it is differentiable and its derivative is continuous per assumption as well we are allowed to evaluate the limit directly.
+\begin{align*}
+    \lim_{k \to \infty}x^{\left(k\right)} = \lim_{k \to \infty} x^{\left(k-1\right)} - \frac{F\left(\lim_{k \to \infty}x^{\left(k-1\right)}\right)}{F'\left(\lim_{k \to \infty}x^{\left(k-1\right)}\right)} \implies \frac{F\left(\lim_{k \to \infty}x^{\left(k-1\right)}\right)}{F'\left(\lim_{k \to \infty}x^{\left(k-1\right)}\right)} = 0 \implies F\left(\lim_{k \to \infty}x^{\left(k-1\right)}\right) = 0
+\end{align*}
+And hence we have
+\begin{equation*}
+    F\left(x^{*}\right) = F\left(\lim_{k \to \infty}x^{\left(k-1\right)}\right) = F\left(\lim_{k \to \infty}x^{\left(k\right)}\right)
+\end{equation*}
+
+\end{document}
