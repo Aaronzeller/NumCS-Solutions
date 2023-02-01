@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\section*{Modified Cosine Transform}
+We are given a vector $\mathbf{a} = \left[a_{0},\dots,a_{n-1}\right]^{\mathsf{T}}$ and we want to compute another vector (where we directly used the identity $\cos\left(x\right) = \frac{1}{2}\left(\text{exp}\left(-ix\right) + \text{exp}\left(ix\right)\right)$  $\mathbf{f} = \left[f_{0},\dots,f_{n-1}\right]^{\mathsf{T}}$ given by
+\begin{equation*}
+    f_{k} = \sum_{l=0}^{n-1}\frac{1}{2}a_{l}e^{-2\pi \cdot i \cdot \frac{kl}{2n}} + e^{\pi \cdot i\cdot \frac{k\left(n-1\right)}{n}} \cdot \sum_{l=0}^{n-1}\frac{1}{2}a_{n-1-l}e^{-2\pi \cdot i\cdot \frac{kl}{2n}}
+\end{equation*}
+Let us recall the linear map given to us by the discrete Fourier transform for a vector $\mathbf{c} = \left[c_{0},\dots,c_{n-1}\right]^{\mathsf{T}} := \text{DFT}_{n}\left(\mathbf{y}\right)$
+\begin{equation*}
+    c_{k} := \sum_{j=0}^{n-1}y_{i}e^{-2\pi \cdot i\cdot \frac{kj}{n}} \quad \text{,} \quad k = 0,\dots ,n-1
+\end{equation*}
+\subsection*{4-7.a} We can quickly see that we have
+\begin{equation*}
+    \mathbf{f} = \left(\text{DFT}_{2n}\left(\mathbf{x}\right)\right)_{0:n-1} + \mathbf{D}\left(\text{DFT}_{2n}\left(\mathbf{y}\right)\right)_{0:n-1}
+\end{equation*}
+We should now determine the values of $\mathbf{x}$, $\mathbf{y}$ and $\mathbf{D}$. We have
+\begin{align*}
+    \left(\mathbf{x}\right)_{l} &= \begin{cases}
+        \frac{1}{2} \cdot a_{l} \quad&\text{for } l \in \left\{0, \dots, n-1\right\}
+        \\
+        0\quad&\text{for } l \in \left\{n, \dots, 2n\right\}
+    \end{cases} \\
+\left(\mathbf{y}\right)_{l} &= \begin{cases}
+        \frac{1}{2} \cdot a_{n- 1 -l} \quad&\text{for } l \in \left\{0, \dots, n-1\right\}
+        \\
+        0\quad&\text{for } l \in \left\{n, \dots, 2n\right\}
+    \end{cases}
+    \\[1mm]
+    \left(\mathbf{D}\right)_{k,k} &= e^{\pi \cdot i \cdot \frac{k\left(n-1\right)}{n}} \quad \text{for } k = 0, \dots, n-1
+\end{align*}
+\subsection*{4-7.b}
+We will go box by box:
+\begin{enumerate}
+    \item $2 * n$
+    \item $0.5 * a$
+    \item fft.fwd(tmp)
+    \item Eigen::VectorXcd::Zero(n)
+    \item fft.fwd(tmp)
+    \item k
+    \item d
+    \item k
+    \item d *= fac
+\end{enumerate}
+
+\end{document}
