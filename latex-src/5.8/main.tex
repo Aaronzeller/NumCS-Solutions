@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section*{Approximating $\pi$ by extrapolation}
+\subsection*{5-8.a} Show that for any $L\in\mathbb{N}$ and for $k \to \infty$
+\begin{equation*}
+    \frac{1}{2}s_{k} = \pi + \sum_{l=1}^{L}c_{l}k^{-2L} + \mathcal{O}\left(k^{-2\left(L+1\right)}\right) \text{ for some } c_{l} \in \mathbb{R} \text{ independent of } L
+\end{equation*}
+We have that $\frac{1}{2}s_{k} = k\sin\left(\frac{\pi}{k}\right)$, we remember the Taylor-Polynomial of $\sin\left(x\right)$
+\begin{equation*}
+    \sin\left(x\right) = x - \frac{x^{3}}{3!} + \frac{x^{5}}{5!} - \dots = \sum_{l=0}^{\infty}\frac{\left(-1\right)^{l}x^{2l + 1}}{\left(2l + 1\right)!}
+\end{equation*}
+This gives us 
+\begin{align*}
+    k \sin\left(\frac{\pi}{k}\right) &= k\left(\sum_{l=0}^{\infty} \frac{\left(-1\right)^{l}\pi^{2l + 1}k^{-2l + 1}}{\left(2l+1\right)!}\right) \\[1mm]
+    &= \pi + \sum_{l=0}^{\infty} \frac{\left(-1\right)^{l}\pi^{2l + 1}k^{-2l}}{\left(2l+1\right)!}
+\end{align*}
+We can thus choose 
+\begin{equation*}
+    c_{l} = \frac{\left(-1\right)^{l}\pi^{2l+1}}{\left(2l+1\right)!}
+\end{equation*}
+And we also have (keep in mind that this series always converges absolutely
+\begin{equation*}
+\sum_{l=L}^{\infty} \frac{\left(-1\right)^{l}\pi^{2l + 1}k^{-2l}}{\left(2l+1\right)!} \leq Ck^{-2\left(L+1\right)}
+\end{equation*}
+We thus get 
+\begin{equation*}
+    \frac{1}{2}s_{k} = k \sin\left(\frac{\pi}{k}\right) = \pi + \sum_{l=1}^{L}c_{l}k^{-2l} + \mathcal{O}\left(k^{-2\left(L+1\right)}\right)
+\end{equation*}
+\subsection*{5-8.d} I am not plotting anything, sorry. But looking at the solution we can see that we get a somewhat linear trend, this means that the error decreases exponentially with a linear increase in polynomial degree. We could even say that the decrease is even faster, as there is a slight downward-bending curve, which hints at superexponential convergence which is even faster than just exponential.
+\subsection*{5-8.e} The error decreases rapidly until it reaches $k = 10$, after that it rapidly increases again. The more points we use, the smaller the differences we compute in the Aitken-Neville algorithm get and hence cancellation can occur which increases the error. We may also attribute this to the strong oscillations between data points when high-degree polynomials are used.
+\end{document}
