@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\section*{Evaluating the derivatives of interpolating polynomials}
+\subsection*{5-1.a}
+The Horner scheme is given to us by
+\begin{equation*}
+    p\left(t\right) = t\left(\dots t\left(t\left(c_{0}t + c_{1}\right) + c_{3}\right) + \dots + c_{k-2}\right) + c_{k-1}
+\end{equation*}
+This will evaluate to
+\begin{equation*}
+    p\left(t\right) = c_{0}t^{k} + c_{1}t^{k-1} + \dots + c_{k-1}t + c_{k}
+\end{equation*}
+And the derivative is given to us by
+\begin{equation*}
+    p'\left(t\right) = k\cdot c_{0}t^{k-1} + \left(k-1\right)\cdot c_{1}t^{k-2} + \dots + c_{k-1}
+\end{equation*}
+We can also use the Horner scheme here
+\begin{equation*}
+    p'\left(t\right) = t\left(\dots t\left(t\left(kc_{0}t + \left(k-1\right) c_{1}\right)+\left(k-2\right)c_{2}\right) + \dots + 2c_{k-3} \right) + c_{k-1}
+\end{equation*}
+\subsection*{5-1.c} The runtime of the function using the Horner scheme for a degree $n$ polynomial is $2 \cdot \mathcal{O}\left(2n\right) = \mathcal{O}\left(n\right)$, when not using the Horner scheme, we must compute the powers $t^{i}$ $n$-times and hence we get the asymptotic runtime of $\mathcal{O}\left(n^{2}\right)$. Well apparently not, but this question is garbage anyway if they ask of us to somehow sniff out that std::pow() incurs only constant computational cost.
+\subsection*{5-1.e} We are tasked to extend the Aitken-Neville scheme to the derivative. Let us first look at the Aitken-Neville scheme
+\begin{equation*}
+    p_{i}\left(t\right) \equiv y_{i} 
+ \quad\text{,} \quad p'_{i}\left(t\right) \equiv 0 \quad \text{,} \quad i = 0, \dots , n
+\end{equation*}
+\begin{equation*}
+    p_{i_{0},\dots,i_{m}}\left(t\right) = \frac{\left(t-t_{i_{0}}\right)p_{i_{1},\dots,i_{m}}\left(t\right) - \left(t-t_{i_{m}}\right)p_{i_{0},\dots,i_{m-1}}\left(t\right)}{t_{i_{m}} - t_{i_{0}}}
+\end{equation*}
+Hence the derivative is given to us by using the product rule for derivation
+\begin{equation*}
+    p'_{i_{0},\dots,i_{m}}\left(t\right) =\frac{p_{i_{1},\dots,i_{m}}\left(t\right) + \left(t-t_{i_{0}}\right)p'_{i_{1},\dots,i_{m}}\left(t\right) - \left(t-t_{i_{m}}\right)p'_{i_{0},\dots,i_{m-1}}\left(t\right) -p_{i_{0},\dots,i_{m-1}}\left(t\right)}{t_{i_{m}} - t_{i_{0}}}
+\end{equation*}
+
+
+\end{document}
