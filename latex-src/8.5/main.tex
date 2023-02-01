@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\newcommand\xk{\mathbf{x}^{\left(k\right)}}
+\newcommand\xkn{\mathbf{x}^{\left(k+1\right)}}
+\newcommand\xstar{\mathbf{x}^{*}}
+\newcommand\xz{\mathbf{x}^{\left(0\right)}}
+
+\newcommand\xo{\mathbf{x}^{\left(1\right)}}
+
+\begin{document}
+\section*{Order $p$-convergent iterations}
+Given $\xstar \in \mathbb{R}^{n}$, suppose that a sequence $\xk$ satisfies 
+\begin{equation}
+    \exists\,C > 0\::\: \left\lVert \xkn - \xstar \right\rVert \leq C\left\lVert \xk - \xstar\right\rVert^{p} \quad \forall\, k \text{ and } p > 1
+\end{equation}
+\subsection*{8-5-a}
+We are tasked with determining $\epsilon_{0}$ as large as possible such that we have
+\begin{equation*}
+    \left\lVert  \xz -\xstar\right\rVert \leq \epsilon_{0} \implies \lim_{k \to \infty}\xk = \xstar
+\end{equation*}
+which means that $\epsilon_{0}$ gives us the maximum distance from the initial guess to $\xstar$ that still guarantees \textbf{local convergence}. We would want to put the term $\left\lVert \xkn - \xstar \right\rVert$ in relation to $ \left\lVert  \xz -\xstar\right\rVert$ for this purpose we can use equation (1) which gives us
+\begin{align*}
+    \left\lVert \xkn - \xstar \right\rVert  &\leq C\left\lVert \xk - \xstar\right\rVert^{p} \quad\left(=C\left(\left\lVert \xk - \xstar\right\rVert\right)^{p}\right) \\
+    &\leq C \cdot \left(C \left\lVert \mathbf{x}^{\left(k-1\right)} - \xstar\right\rVert^{p-1}\right)^{p} \\
+    &= C\cdot C^{p}\cdot\left\lVert  \mathbf{x}^{\left(k-1\right)}- \xstar\right\rVert^{p^{2}} \\
+    &\leq C\cdot C^{p}\cdot C^{p^{2}}\cdot\left\lVert \mathbf{x}^{\left(k-2\right)} - \xstar\right\rVert^{p^{3}} \\
+    \vdots \\
+    &\leq C \cdot \: \dots \: \cdot C^{p^{k}} \cdot\left\lVert \mathbf{x}^{\left(k-k\right)} - \xstar \right\rVert^{p^{k+1}} \\
+    &= C \cdot \: \dots \: \cdot C^{p^{k}}\cdot\left\lVert \mathbf{x}^{\left(0\right)} - \xstar \right\rVert^{p^{k+1}} \\
+    &= \underbrace{\:C^{p^{0} + p^{1}+\dots +p^{k}}\:}_{\text{geometric series}}\cdot\left\lVert \mathbf{x}^{\left(0\right)} - \xstar \right\rVert^{p^{k+1}} \\
+    &= C^{\frac{p^{k+1}-p^{0}}{p-1}} \cdot\left\lVert \mathbf{x}^{\left(0\right)} - \xstar \right\rVert^{p^{k+1}} \\
+    &\leq C^{\frac{p^{k+1}-p^{0}}{p-1}} \cdot \epsilon_{0}^{p^{k+1}} \\
+    &= C^{\frac{p^{k+1}-1}{p-1}} \cdot \epsilon_{0}^{p^{k+1}}
+\end{align*}
+This hence gives us
+\begin{equation*}
+    \left\lVert \xkn - \xstar \right\rVert   \leq C^{\frac{p^{k+1}-1}{p-1}} \cdot \epsilon_{0}^{p^{k+1}}
+\end{equation*}
+
+\pagebreak
+
+\noindent We can rewrite this to 
+\begin{align*}
+    \left\lVert \xkn - \xstar \right\rVert   \leq C^{\frac{p^{k+1}-1}{p-1}} \cdot \epsilon_{0}^{p^{k+1}} &= C^{\frac{p^{k+1}}{p-1} - \frac{1}{p-1}} \cdot \epsilon_{0}^{p^{k+1}} \\
+    &=C^{\frac{p^{k+1}}{p-1} + \frac{1}{1-p}} \cdot \epsilon_{0}^{p^{k+1}} \\
+    &= C^{\frac{1}{1-p}} \cdot C^{\frac{p^{k+1}}{p-1}}\cdot \epsilon_{0}^{p^{k+1}} \\
+    &= \underbrace{C^{\frac{1}{1-p}}}_{\text{constant factor}} \cdot \left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)^{p^{k+1}}
+\end{align*}
+because $C^{\frac{1}{1-p}}$ is a constant factor we can concentrate on the behaviour of the term that it is multiplied with, as that should go to zero regardless of the factor being there or not. We thus want 
+\begin{equation*}
+    \left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)^{p^{k+1}} \to 0 \:\text{ for } k \to \infty 
+\end{equation*}
+
+\noindent which converges to zero if and only if $C^{\frac{1}{p-1}}\cdot \epsilon_{0} < 1$ from which we can deduce
+\begin{equation*}
+   C^{\frac{1}{p-1}}\cdot \epsilon_{0} < 1 \implies  \epsilon_{0} < C^{\:-\frac{1}{p-1}} = C^{\frac{1}{1-p}}
+\end{equation*}
+We are given $\epsilon_{0} > 0$ by the exercise hence we conclude
+\begin{equation*}
+    0 < \epsilon_{0} < C^{\frac{1}{1-p}}
+\end{equation*}
+\subsection*{8-5.b}
+We are tasked with determining the minimal iteration step $k_{\text{min}}$ such that $\left\lVert \xk - \xstar\right\rVert < \tau$ (we will just ignore the weird notation they use to denote the minimal iteration step in the exercise description) provided that $\left\lVert  \xz -\xstar\right\rVert \leq \epsilon_{0}$ is satisfied with the $\epsilon_{0}$ found in 8-5.a. We want 
+\begin{equation}
+    \left\lVert \xk - \xstar\right\rVert < \tau
+\end{equation}
+and we already have found (notice the switch from $k+1$ to $k$)
+\begin{align*}
+    \left\lVert \xk - \xstar \right\rVert   \leq C^{\frac{1}{1-p}} \cdot \left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)^{p^{k}}
+\end{align*}
+So we can achieve (2) by setting
+\begin{equation*}
+    C^{\frac{1}{1-p}} \cdot \left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)^{p^{k}} < \tau
+\end{equation*}
+This is now in a form that tells us rather little about what value $k$ should be, we hence have to extract $k$ somehow. 
+
+\pagebreak
+
+\noindent We can do this by applying the logarithm to both sides, which gives us
+\begin{align*}
+    \ln\left( C^{\frac{1}{1-p}} \cdot \left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)^{p^{k}}\right) < \ln\left(\tau\right) &\implies \ln\left(C^{\frac{1}{1-p}}\right) + \ln\left(\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)^{p^{k}}\right) < \ln\left(\tau\right) \\[1mm]
+    &\implies \ln\left(C^{\frac{1}{1-p}}\right) + p^{k}\cdot\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right) < \ln\left(\tau\right) \\[1mm]
+    &\implies p^{k}\cdot\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right) <\ln\left(\tau\right) - \ln\left(C^{\frac{1}{1-p}}\right) \\
+    &\implies p^{k}\cdot\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right) <\ln\left(\tau\right) + \ln\left(C^{-\frac{1}{1-p}}\right) \\
+    &\implies p^{k}\cdot\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right) <\ln\left(\tau\right) + \ln\left(C^{\frac{1}{p-1}}\right) \\
+    &\implies p^{k}<\frac{\ln\left(\tau\right) + \ln\left(C^{\frac{1}{p-1}}\right)}{\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)}\\ 
+    &\implies k<\log_{p}\left(\frac{\ln\left(\tau\right) + \ln\left(C^{\frac{1}{p-1}}\right)}{\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)}\right)
+\end{align*}
+We know apply that
+\begin{equation*}
+    \log_{p}\left(x\right) = \frac{\ln\left(x\right)}{\ln\left(p\right)}
+\end{equation*}
+Which then gives us 
+\begin{equation*}
+k<\ln\left(\frac{\ln\left(\tau\right) + \ln\left(C^{\frac{1}{p-1}}\right)}{\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)}\right) \cdot \frac{1}{\ln\left(p\right)} =\ln\left(\frac{\ln\left(\tau\right) + \frac{1}{p-1}\ln\left(C\right)}{\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)}\right) \cdot \frac{1}{\ln\left(p\right)} 
+\end{equation*}
+The smallest $k$ (which is an integer) for which this is true is given by
+\begin{equation*}
+    k_{\text{min}} = \left\lceil \ln\left(\frac{\ln\left(\tau\right) + \frac{1}{p-1}\ln\left(C\right)}{\ln\left(C^{\frac{1}{p-1}}\cdot \epsilon_{0}\right)}\right) \cdot \frac{1}{\ln\left(p\right)}\right\rceil
+\end{equation*}
+this is the desired result.
+\subsection*{8-5.c}
+This exercise was left out as it adds little to the understanding of the subjects.
+
+\end{document}
