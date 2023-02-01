@@ -1,0 +1,149 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\section{Problem 4-2: FFT and least squares}
+We can describe the orbit of a planet around the sun as a closed, planar curve $\mathcal{C} \subset \mathbb{R}^{2}$, which in polar representation gives us
+\begin{equation*}
+    \mathcal{C} := \left\{
+    \begin{bmatrix}
+    d\left(\varphi\right) \cdot \cos\left(\varphi\right) \\
+    d\left(\varphi\right) \cdot \sin\left(\varphi\right)
+    \end{bmatrix} 
+    \: : \: 0 \leq \varphi < 2\pi \right\}
+\end{equation*}
+Where $d$ is given a function $\left[0 \,,\, 2\pi\right] \to \mathbb{R}^{+}$ of the polar angle $\varphi$ providing the distance of a point on the curve from the origin in the direction of that angle.
+
+\vspace{2ex}
+
+\noindent The sun is in the origin of the coordinate system. We construct \textit{trigonometric polynomials} of degree $\leq m$ as $2\pi\text{-periodic}$ functions $\mathbb{R} \to \mathbb{R}$ of the form
+\begin{equation*}
+    p\left(t\right) = \sum_{k=0}^{m}c_{k} \cdot \cos\left(kt\right) \text{,} \qquad c_{k} \in \mathbb{R}
+\end{equation*}
+which are then all in the set of trigonometric polynomials $\mathcal{P}^{\mathrm{C}}_{m}$ for some $m \in \mathbb{N}$. We want to know approcimate the distance $d\left(\varphi\right)$ of the planet from the sun as a function of the angle by a trigonometric polynomial $p^{*} \in \mathcal{P}^{\mathrm{C}}_{m}$, which minimalizes the sum of squares of "distance mismatchses":
+\begin{equation}
+    p^{*} = \underset{p \in \mathcal{P}^{\mathrm{C}}_{m}}{\text{argmin}} \: \sum_{j=0}^{n-1} \: \left\lvert \, p\left(\varphi_{j}\right) - d_{j}\right\rvert^{2} 
+\end{equation}
+The degree of the polynomial $p^{*}$ is given to us by $m$ and we have $n$ points of data, we will assume that $2m < n$ throughout this exercise. 
+\paragraph{(4-2.a)} The standard form of the linear least square problem is given by
+\begin{equation}
+    \mathbf{x}^{*} = \underset{x \in \mathbb{R}^{?}}{\text{argmin}} \: \lVert \hspace{1px} \mathbf{A}\mathbf{x} - \mathbf{b} \,\rVert_{2}
+\end{equation}
+with a suitable matrix $\mathbf{A} \in \mathbb{R}^{?\text{,}?}$ and vectors $\mathbf{b} \text{, } \mathbf{x} \in \mathbb{R}^{?}$. Our task is it to rewrite expression $\left(1\right)$ as an expression of form $\left(2\right)$. \vspace{2ex}
+\noindent We first realize that the sum in expression $\left(1\right)$ can be realized as a matrix multiplication, because we have
+\begin{equation*}
+    p^{*} = \underset{p \in \mathcal{P}^{\mathrm{C}}_{m}}{\text{argmin}} \: \sum_{j=0}^{n-1} \: \left(\left\lvert \, \sum_{k = 0}^{m}c_{k}\cdot\cos\left(k\cdot\varphi_{j}\right) - d_{j}\right\rvert^{2} \right)
+\end{equation*}
+\pagebreak
+Let us write this first as a norm:
+\begin{equation*}
+    p^{*} = 
+    \left\lVert
+    \begin{matrix}
+    \sum_{k = 0}^{m}c_{k} \cdot \cos\left(k \cdot \varphi_{0}\right) - d_{0} \\
+    \dots
+    \\
+    \sum_{k = 0}^{m}c_{k} \cdot \cos\left(k \cdot \varphi_{n - 1}\right) - d_{n-1}
+    \end{matrix}
+    \right\rVert_{2}^{2} = 
+    \left\lVert
+    \begin{matrix}
+    \sum_{k = 0}^{m}c_{k} \cdot \cos\left(0\cdot k \cdot \frac{2\pi}{n}\right) - d_{0} \\
+    \dots
+    \\
+    \sum_{k = 0}^{m}c_{k} \cdot \cos\left(\left(n-1\right) \cdot k \cdot \frac{2\pi}{n}\right) - d_{n-1}
+    \end{matrix}
+    \right\rVert_{2}^{2}
+\end{equation*}
+We want the following equation to hold
+\begin{equation*}
+    \left\lVert
+    \begin{matrix}
+    \sum_{k = 0}^{m}c_{k} \cdot \cos\left(0\cdot k \cdot \frac{2\pi}{n}\right) - d_{0} \\
+    \dots
+    \\
+    \sum_{k = 0}^{m}c_{k} \cdot \cos\left(\left(n-1\right) \cdot k \cdot \frac{2\pi}{n}\right) - d_{n-1}
+    \end{matrix}
+    \right\rVert_{2}^{2} \overset{!}{=} 
+    \lVert \hspace{1px} \mathbf{A}\mathbf{x} - \mathbf{b} \,\rVert_{2}^{2}
+\end{equation*}
+We thus get the following matrix for $\mathbf{A}$ and vector for $\mathbf{b}$:
+\begin{equation*}
+    \mathbf{A} = 
+    \begin{pmatrix}
+    \cos\left(0\right) & \cos\left(0\right) & \dots &  \cos\left(0\right) \\[1mm]
+    \cos\left(\frac{2\pi}{n}\right) &\cos\left(\frac{4\pi}{n}\right) & \dots & \cos\left(\frac{2m\pi}{n}\right) \\
+    \vdots & \vdots & & \vdots \\
+    \cos\left(\frac{2\pi\left(n-1\right)}{n}\right) &\cos\left(\frac{4\pi\left(n-1\right)}{n}\right) & \dots & \cos\left(\frac{2m\pi\left(n-1\right)}{n}\right)
+    \end{pmatrix} \in \mathbb{R}^{n\text{,}m+1} \qquad 
+    \mathbf{b} = \begin{pmatrix}
+    d_{0} \\
+    d_{1} \\
+    \vdots
+    d_{n-1}
+    \end{pmatrix} \in \mathbb{R}^{n}
+\end{equation*}
+This gives us exactly the waned expression. 
+\paragraph{\textbf{(4-2.b)}}
+The \textit{normal equations} of a linear least-squares problem in the form of $\left(2\right)$ are given by
+\begin{equation*}
+      \mathbf{x}^{*} = \underset{x \in \mathbb{R}^{?}}{\text{argmin}} \: \lVert \hspace{1px} \mathbf{A}\mathbf{x}^{*} - \mathbf{b} \,\rVert_{2} \Longleftrightarrow \text{Solve } \mathbf{A}^{\mathsf{T}}\mathbf{A}\mathbf{x} = \mathbf{b}\mathbf{x}^{*}
+\end{equation*}
+To allow for a better visualization we will rewrite the matrix $\mathbf{A}$ as
+\begin{equation*}
+    \mathbf{A} = \left(\cos\left(\frac{2\pi}{n}\right)kl\right)_{\substack{l = 0,...,n-1 \\ k=0,...,m}}
+\end{equation*}
+Using Euler's formula $\cos\left(2\pi x\right) = \frac{1}{2}\left(e^{2\pi i x} + e^{-2\pi i x}\right)$ we get:
+\begin{equation*}
+    \mathbf{A} = \left(\cos\left(\frac{2\pi}{n}\right)kl\right)_{\substack{l = 0,...,n-1 \\ k=0,...,m}} = \left(\frac{1}{2}\left(e^{2\pi i x} + e^{-2\pi i x}\right)kl\right)_{\substack{l = 0,...,n-1 \\ k=0,...,m}}
+\end{equation*}
+And thus:
+\begin{align*}
+    \left(\mathbf{A}^{\mathsf{T}}\mathbf{A}\right)_{j\text{,}k} &= \sum_{l=0}^{n-1}\cos\left(\frac{2\pi jl}{n}\right)\cos\left(\frac{2\pi k l}{n}\right) \\
+    &=\frac{1}{4}\sum_{l=0}^{n-1}\left(e^{2\pi i jl} + e^{-2 \pi i jl}\right)\left(e^{2\pi i kl} + e^{-2 \pi i kl}\right) \\
+    &= \frac{1}{4}\sum_{l=0}^{n-1}\left(e^{\frac{2 \pi\left(j+k\right)li}{n}} +e^{\frac{2 \pi\left(jjk\right)li}{n}}+ e^{\frac{2 \pi\left(k-j\right)li}{n}}+e^{-\frac{2 \pi\left(j+k\right)li}{n}}\right)
+\end{align*}
+\pagebreak
+We know that for the geometric sum the following is true
+\begin{equation*}
+    \sum_{l=0}^{n-1}q^{l} = \frac{1-q^{n}}{1-q}
+\end{equation*}
+If $q = e^{\frac{2\pi iv}{n}}$ for $n \in \mathbb{Z}$ and we use the following for $\omega_{n} := e^{-\frac{2\pi i}{n}}$:
+\begin{equation*}
+    \sum_{k=0}^{n-1}\omega_{n}^{kj} =\sum_{k=0}^{n-1}\left(\omega_{n}^{j}\right)^{k} =
+    \begin{cases}
+    n\,\text{, if } j = 0 &\text{ mod } n \text{,} \\
+    0 \,\text{, if } j \neq 0 &\text{ mod } n
+    \end{cases}
+\end{equation*}
+Which follows from the cyclic behaviour of complex numbers. We thus conclude 
+\begin{equation*}
+    \sum_{l=0}^{n-1}e^{\frac{2 \pi i}{n}lv} = 
+    \begin{cases}
+    n &\text{, if } v \in n\mathbb{Z} \text{,} \\[1mm]
+    0 &\text{ else.}
+    \end{cases}
+\end{equation*}
+Coming back to our earlier result we have:
+\begin{equation*}
+     \frac{1}{4}\sum_{l=0}^{n-1}\left(e^{\frac{2 \pi\left(j+k\right)li}{n}} +e^{\frac{2 \pi\left(jjk\right)li}{n}}+ e^{\frac{2 \pi\left(k-j\right)li}{n}}+e^{-\frac{2 \pi\left(j+k\right)li}{n}}\right) = 
+     \begin{cases}
+     n \text{, } &j=k=0 \\
+     n/2 \text{, } &j = k \neq 0 \\
+     0 \text{, } &j \neq k
+     \end{cases}
+\end{equation*}
+We have assumed that $2m < n$, hence we can see that $\mathbf{A}^{\mathsf{T}}\mathbf{A}$ is diagonal. We get 
+\begin{equation*}
+   \mathbf{A}^{\mathsf{T}}\mathbf{A} = \begin{bmatrix}
+   n & 0& \dots & 0& \\
+   0 & \frac{n}{2} & \dots & 0 \\
+   \vdots & \vdots &\ddots & \vdots \\
+   0 & 0 & 0 & \frac{n}{2} 
+   \end{bmatrix} \in \mathbb{R}^{m+1\,\text{,}\,m+1}
+\end{equation*}
+
+
+\end{document}
