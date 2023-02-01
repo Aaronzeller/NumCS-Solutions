@@ -1,0 +1,81 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+
+\begin{document}
+
+\section*{Linear monotonicity-preserving $C^{1}$-interpolation scheme}
+The goal of this problem is to prove the following theorem.
+
+\begin{figure}[!hbt]
+    \centering
+\includegraphics[width=1.0\linewidth]{5-7Theorem.png}
+\end{figure}
+
+\subsection*{5-7.a}
+We are tasked with showing that assertion (5.7.2) holds for the special data vectors
+\begin{equation*}
+    \mathbf{y} = \mathbf{y}^{\left(j\right)} := \big[\underbrace{0, \dots, 0}_{\text{$j$ times}}, 1, \dots, 1\big]^{\mathsf{T}}\, , \quad j = 0, \dots, n
+\end{equation*}
+Let us consider an arbitraty but fixed interpolation operator $I_{\mathcal{T}}$ with all the properties in Theorem 5.7.1. Let us then look at 
+\begin{equation*}
+    \left(I_{\mathcal{T}}\left(\mathbf{y}^{\left(j\right)}\right)\right)'\left(t_{i}\right)\,,\quad j = 0, \dots, n
+\end{equation*}
+We have 
+\begin{equation*}
+    \left(I_{\mathcal{T}}\left(\mathbf{y}^{\left(j\right)}\right)\right)\left(t_{i}\right) = y_{i}
+\end{equation*}
+for all $i= 0, \dots, n$ by definition. Hence we have that $I_{\mathcal{T}}\left(\mathbf{y}^{\left(j\right)}\right)$ is constant between $t_{0}$ and $t_{j-1}$ and between $t_{j}$ and $t_{n}$ which gives
+\begin{equation*}
+    \left(I_{\mathcal{T}}\left(\mathbf{y}^{\left(j\right)}\right)\right)\left(t_{i}\right) = \begin{cases}
+    0 \quad &\text{for } 0 \leq i \leq j \\
+    1 &\text{for } j + 1 \leq i \leq n 
+    \end{cases}
+\end{equation*}
+Hence we have that in the interval $\left[t_{0}, t_{j-1}\right]$ and $\left[t_{j}, t_{n}\right]$ the function is constant and thus the the derivative must be zero in these intervals, which is exactly 
+\begin{equation*}
+    \left(I_{\mathcal{T}}\left(\mathbf{y}^{\left(j\right)}\right)\right)'\left(t_{i}\right) = 0 \,,\quad \text{for } 1 \leq i \leq n-1
+\end{equation*}
+which was what we were tasked with showing.
+\subsection*{8-7.b}
+We are now tasked with proving that $\text{span}\left\{\mathbf{y}^{\left(j\right)}, \: j = 0,\dots, n\right\}$. We can do this by interpreting them as the rows of a $\left(n+1\right) \times \left(n+1\right)$ looking like
+\begin{equation*}
+    \begin{bmatrix}
+    1 & 1 & 1 & \dots & 1 & 1  & 1\\
+    0 & 1 & 1 & \dots & 1 & 1 & 1 \\
+    0 & 0 & 1 & \dots & 1 & 1 & 1 \\
+    \vdots  & \vdots & \vdots & \ddots & \vdots & \vdots \\
+    0 & 0 & 0 &  \dots & 0 & 1 & 1 \\
+    0 & 0 & 0 &  \dots & 0 & 1 & 1 \\
+    0 & 0 & 0 &  \dots & 0 & 0 & 1
+    \end{bmatrix}
+\end{equation*}
+this is a triangular square matrix hence its determinant is the product of the diagonal elements, which is $1$, hence this matrix is regular and has thus full rank. As a consequence it has $n+1$ linearly independent columns and because the column rank must be equal to the row rank and this is a square matrix we get that it also has $n+1$ linearly independent rows. $n+1$ linearly independent vectors in $\mathbb{R}^{n+1}$ must form a basis and it thus follows that
+\begin{equation*}
+    \text{span}\left\{\mathbf{y}^{\left(j\right)}, \: j = 0,\dots, n\right\}
+\end{equation*}
+\subsection*{5-7.c}
+We are now tasked with proving Theorem 5.7.1. We can write any vector $\mathbf{y}\in \mathbb{R}^{n+1}$ as linear combination of the vectors $\mathbf{y}^{\left(j\right)}$ as was shown in 8-7.b, hence we have for $\alpha_{0}, \dots, \alpha_{n} \in \mathbb{R}$
+\begin{equation*}
+    \mathbf{y} = \alpha_{0}\mathbf{y}^{\left(0\right)} + \dots + \alpha_{n}\mathbf{y}^{\left(n\right)}
+\end{equation*}
+using this fact we can see that 
+\begin{equation*}
+    \alpha_{0}\mathbf{y}^{\left(0\right)} + \dots + \alpha_{n}\mathbf{y}^{\left(n\right)}
+\end{equation*}
+and thus the function is given by
+\begin{align*}
+    I_{\mathcal{T}}\left(\mathbf{y}\right)\left(t_{i}\right) &= I_{\mathcal{T}}\left(\alpha_{0}\mathbf{y}^{\left(0\right)} + \dots + \alpha_{n}\mathbf{y}^{\left(n\right)}\right)\left(t_{i}\right) \\
+    &=\alpha_{0}I_{\mathcal{T}}\left(\mathbf{y}^{\left(0\right)}\right) + \dots + \alpha_{n}I_{\mathcal{T}}\left(\mathbf{y}^{\left(n\right)}\right) \quad \text{(ii) linearity}
+\end{align*}
+The derivative is thus given by
+\begin{align*}
+   \left(I_{\mathcal{T}}\left(\mathbf{y}\right)\right)'\left(t_{i}\right) &= \alpha_{0}\left(I_{\mathcal{T}}\left(\mathbf{y}^{\left(0\right)}\right)\right)' + \dots + \alpha_{n}\left(I_{\mathcal{T}}\left(\mathbf{y}^{\left(n\right)}\right)\right)' \\
+   &= \alpha_{0} \cdot 0 + \dots \alpha_{n} \cdot 0 \quad \text{(5-7.a)}\\
+   &= 0
+\end{align*}
+which is exactly the statement of Theorem 5.7.1. We hence conclude the proof.
+\end{document}
