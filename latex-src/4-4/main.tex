@@ -1,0 +1,146 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\setcounter{MaxMatrixCols}{20}
+
+\begin{document}
+\section*{Solving triangular Toeplitz systems}
+\subsection*{4-4.a}
+We are given a Toeplitz matrix $\mathbf{T} \in \mathbb{R}^{m,n}$ which is not circulant we are now tasked with extending this to a matrix $\mathbf{C}$ 
+\begin{equation*}
+    \mathbf{C}= \begin{bmatrix}
+       \mathbf{T} & \mathbf{S} \\
+       \mathbf{S} & \mathbf{T}
+    \end{bmatrix} \in \mathbb{R}^{2n,2n}
+\end{equation*}
+We know that the matrix $\mathbf{T}$ looks like
+\begin{equation*}
+    \mathbf{T} = 
+    \begin{bmatrix}
+        t_{0} & t_{1} & \dots & & \dots & t_{n-1} \\
+        t_{-1} & t_{0} & t_{1} & & & \vdots \\ 
+        \vdots & \ddots &\ddots & \ddots & & \vdots \\
+        \vdots & & \ddots & \ddots & \ddots & \vdots \\
+        \vdots & & & \ddots & \ddots & t_{1} \\
+        t_{- n + 1} & \dots & & \dots & t_{-1} & t_{0}
+    \end{bmatrix}
+\end{equation*}
+We pad in the following way
+\begin{equation*}
+    \begin{bmatrix}
+       t_{0}       & t_{1}      & \dots      &        & \dots  & t_{n-1} & 0         & t_{-n  + 1} & \dots      &             & \dots &t_{-1}\\
+       t_{-1}      & t_{0}      & t_{1}      &        &        & \vdots  & t_{n - 1} & 0           & t_{-n + 1} & \dots       & \dots & t_{-2}\\
+       \vdots      & \ddots     &\ddots      & \ddots &        & \vdots  & \vdots    & t_{n -1}    & 0          & t_{-n + 1}  & \dots & \vdots\\
+       \vdots      &            & \ddots     & \ddots & \ddots & \vdots  &           & \vdots      & t_{n-1}    & 0           & t_{-n + 1} & \\
+       \vdots      &            &            & \ddots & \ddots & t_{1}   & \vdots    &             & \vdots     & t_{n-1}     & 0 & t_{-n + 1}\\
+       t_{- n + 1} & \dots      &            & \dots  & t_{-1} & t_{0}   & t_{1}     & \vdots      &            & \vdots      & t_{n-1} & 0\\
+       0           & t_{-n + 1} &            & \dots  & \dots  & t_{-1}  & t_{0}     & t_{1}       & \vdots     &             & \vdots &t_{n-1}\\   
+       t_{n - 1}   & 0          & t_{-n + 1} & \dots  &        & \dots   & t_{-1}    & t_{0}       & t_{1}      & \vdots      &  & \vdots\\
+       \vdots      & \ddots     & \ddots     & \ddots &        &         &\dots      & t_{-1}      & t_{0}      & t_{1}       &  &\\
+                   &            & \ddots     & \ddots & \ddots &         &           & \dots       & t_{-1}     & t_{0}       & t_{1} &  \vdots\\
+       \vdots      &            &            &        & \ddots & \ddots  &           &             &            & \ddots      & t_{0} &  t_{1}\\
+       t_{1}       & \dots      &            &        &        &  0      & t_{-n +1} &   \dots     &            &             & t_{-1} & t_{0}\\
+    \end{bmatrix}
+\end{equation*}
+
+\pagebreak
+
+We hence get the matrix $\mathbf{S}$
+\begin{equation*}
+    \mathbf{S} = 
+    \begin{bmatrix}
+        0         & t_{-n  + 1} & \dots      &             &t_{-1}\\
+        t_{n - 1} & 0           & t_{-n + 1} & \dots        & t_{-2}\\
+        \vdots    & t_{n -1}    & 0          & \ddots  & \vdots \\
+           & \vdots    &     \ddots     & \ddots     & t_{-n +1}  \\
+        t_{1} & t_{0}  &   & t_{n-1} & 0 
+    \end{bmatrix}
+\end{equation*}
+
+\subsection*{4-4.c}
+Looking at the two code examples we can see that the top one does take the Toeplitz-matrix created in 4-4.b and computes:
+\begin{equation*}
+    \mathbf{T} * \mathbf{x}
+\end{equation*}
+
+The second one does a more complicated operation. Let us understand what is happening. We use the complex vectors \textit{cr\_tmp} and \textit{x\_tmp} because the fast-fourier-transform works with complex arguments. We use \textit{conservativeResize} to add $n$ more elements without changing the format of the remaining values, in this case we do not have to change the original vector, as the resize is compatible, hence all values are used and none are lost. We now zero-pad the rest of \textit{cr\_tmp} using complex zeros, we then set the real parts in such a way that we add the the reversed order of the vector $\mathbf{r}$ to the tail, while leaving a zero between. This should seem very similar to what we did in 4-4.a. \textit{x\_tmp} is zero-padded. We then use \textit{pconvfft} which used the Convolution theorem to do a discrete periodic convolution between \textit{cr\_tmp} and \textit{x\_tmp}
+\begin{equation*}
+    \left(cr_{tmp}\right) *_{n} \left(x_{tmp}\right)
+\end{equation*}
+using the fast Fourier transform algorithm, using the real part of the result and resizing it to the first $n$ values, then gives the same result, because we do the same exact thing as in the top code, just using the convolution theorem to use fft instead of computing the actual convolution using the circulant matrix itself. We can illustrate this by looking at $\mathbf{T}$ and $\mathbf{C}$ from 4-4.a:
+\begin{equation*}
+    \mathbf{C}\begin{bmatrix}
+        \mathbf{x} \\ \mathbf{0}
+    \end{bmatrix} =
+    \begin{bmatrix}
+        \mathbf{T} & \mathbf{S} \\
+        \mathbf{S} & \mathbf{T}
+    \end{bmatrix}
+    \begin{bmatrix}
+        \mathbf{x} \\
+        \mathbf{0}
+    \end{bmatrix} = 
+    \begin{bmatrix}
+        \mathbf{Tx} + \mathbf{S0} \\
+        \mathbf{Sx} + \mathbf{T0}
+    \end{bmatrix} =
+    \begin{bmatrix}
+        \mathbf{Tx} \\
+        \mathbf{Sx}
+    \end{bmatrix}
+\end{equation*}
+We can thus use that $C$ is circulant and that we compute a discrete periodic convolution and hence can use \textit{pconvfft}.
+\subsection*{4-4.d}
+\textit{topematmult()} does a matrix-vector-multiplication which takes $\mathcal{O}\left(n^{2}\right)$, \textit{toepmult()} does vector operations like padding, resizing and casting in $\mathcal{O}\left(n\right)$, the ffts ($3$ of size $2n$) are in $\mathcal{O}\left(n \cdot \log\left(n\right)\right)$ and thus overall we get $\mathcal{O}\left(n \cdot \log\left(n\right)\right)$.
+\subsection*{4-4.e}
+The top code constructs a vector \textit{t\_tmp} which contains zeroes besides the first entry which is the same as \textit{h}. It the computed a topelitz matrix $\mathbf{H_{n}}$ that looks like
+\begin{equation*}
+\mathbf{H_{n}} = 
+    \begin{bmatrix}
+        h_{1} & 0 & 0 & \dots & & \dots &  0\\
+        h_{2} & h_{1} & 0 & \dots & 
+ &\dots &0\\
+        \vdots & h_{1} & h_{1} & \ddots & & & \vdots\\
+        \\
+       &  &  &\ddots & 
+ & \ddots &\vdots\\
+        \vdots & \vdots & \vdots &  & &\ddots & 0 \\
+        h_{n} & h_{n-1} & h_{n-2}&\dots & & \dots & h_{1}
+    \end{bmatrix}
+\end{equation*}
+We then solve $\mathbf{Tx} = \mathbf{y}$ for $\mathbf{x}$. In the second function we see that $n = 2m$, we use the insights gained in the last exercise to determine the system we solve:
+\begin{equation*}
+    \mathbf{H_{n}x} = \mathbf{y} 
+\end{equation*}
+We can by the structure of $\mathbf{H_{n}}$ that
+\begin{equation*}
+    \mathbf{H_{n}} = \begin{bmatrix}
+        \mathbf{H_{m}} & \mathbf{0} \\
+        \mathbf{T_{m}} & \mathbf{H_{m}}
+    \end{bmatrix}
+\end{equation*}
+This gives us the equivalent system
+\begin{equation*}
+    \begin{bmatrix}
+        \mathbf{H_{m}} & \mathbf{0} \\
+        \mathbf{T_{m}} & \mathbf{H_{m}}
+    \end{bmatrix}
+    \begin{bmatrix}
+        \mathbf{x_{1}} \\
+        \mathbf{x_{2}}
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+        \mathbf{y_{1}} \\
+        \mathbf{y_{2}}
+    \end{bmatrix}
+\end{equation*}
+We get the solutions
+\begin{equation*}
+    \mathbf{x_{1}} = \mathbf{H_{m}}^{-1}\mathbf{y_{1}} \qquad \mathbf{x_{2}} = \mathbf{H_{m}}^{-1}\left(\mathbf{y}_{2} - \mathbf{T_{m}x_{1}}\right)
+\end{equation*}
+$\mathbf{H_{m}}$ is a triangular Toeplitz matrix, hence if $h_{1} \neq 0$ then it is invertible. We can thus solve the system recursively by dividing it into more and more block until we reach length $1$, where the system can be trivially solved. The multiplication $\mathbf{T_{m}x_{1}}$ is performed using \textit{toepmult()}. Hence these two functions do the same exact thing.
+\subsection*{4-4.f}
+We can see that using divide \& conquer allows us to reduce the runtime compared to \textit{ttmatsolve} which works in $\mathcal{O}\left(n^{3}\right)$ as it does a LU-decomposition to solve the LSE. In ttrecsolve we get a recursion depth of $\mathcal{O}\left(\log\left(n\right)\right)$ assuming power-of-two size. This gives us an overall runtime of $\mathcal{O}\left(n \cdot \log\left(n\right)\cdot \log\left(n\right)\right)$ which is an improvement.
+\end{document}
